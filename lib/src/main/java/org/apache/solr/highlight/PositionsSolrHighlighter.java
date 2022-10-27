@@ -74,6 +74,17 @@ class PosHTMLFormatter implements Formatter {
 
   public Map<Integer, Integer> map;
   Map<Integer, String> positions;
+  boolean hloffsets;
+
+  public void setHlOffsets(boolean value) {
+    hloffsets = value;
+  }
+  public void setPositions(Map<Integer, String> value) {
+    positions = value;
+  }
+  public void setMap(Map<Integer, Integer> value) {
+    map = value;
+  }
 
   public PosHTMLFormatter(String preTag, String postTag) {
       this.preTag = preTag;
@@ -108,14 +119,28 @@ class PosHTMLFormatter implements Formatter {
       }
       //log.debug(new ObjectMapper().writeValueAsString(tokenGroup))
       StringBuffer myPreTag;
-      if (map != null && map.containsKey(tokenGroup.getStartOffset())) {
-          Integer pos = map.get(tokenGroup.getStartOffset());
+      Integer startOffset = tokenGroup.getStartOffset();
+      Integer endOffset = tokenGroup.getEndOffset();
+      if (map != null && map.containsKey(startOffset)) {
+          Integer pos = map.get(startOffset);
           Integer myPreTagLen = preTag.length() + " pos=''".length() + pos.toString().length();
+          if (hloffsets) {
+              myPreTagLen += " startOffset=''".length() + startOffset.toString().length();
+              myPreTagLen += " endOffset=''".length() + endOffset.toString().length();
+          }
           myPreTag = new StringBuffer(myPreTagLen);
           myPreTag.append(preTag.substring(0, preTag.length()-1));
           myPreTag.append(" pos=\"");
           myPreTag.append(pos.toString());
           myPreTag.append("\"");
+          if (hloffsets) {
+            myPreTag.append(" startOffset=\"");
+            myPreTag.append(startOffset.toString());
+            myPreTag.append("\"");
+            myPreTag.append(" endOffset=\"");
+            myPreTag.append(endOffset.toString());
+            myPreTag.append("\"");
+          }
           myPreTag.append(preTag.substring(preTag.length()-1));
       } else {
           myPreTag = new StringBuffer(preTag.length());
@@ -181,9 +206,11 @@ public class PositionsSolrHighlighter extends SolrHighlighter implements
     }
     // if true return only words that match with position
     boolean hlpos = params.getBool("hl.pos", false) ? true : false;
+    boolean hloffsets = params.getBool("hl.offsets", false) ? true : false;
     SolrIndexSearcher searcher = req.getSearcher();
     // our own HTML formatter
     PosHTMLFormatter formatter = new PosHTMLFormatter();
+    formatter.setHlOffsets(hloffsets);
     QueryScorer scorer = new QueryScorer(query);
     String[] fieldNames = getHighlightFields(query, req, defaultFields);
     Highlighter highlighter = new Highlighter(formatter, scorer);
@@ -243,10 +270,10 @@ public class PositionsSolrHighlighter extends SolrHighlighter implements
           int start = offsets.startOffset();
           map.put(start, pos += increment);
         }
-        formatter.map = map;
+        formatter.setMap(map);
         if (hlpos) { // if we are to return only mathing token with positions
           // initialize positions hashmap
-          formatter.positions = new HashMap<Integer, String>();
+          formatter.setPositions(new HashMap<Integer, String>());
         }
         ts.reset();
         int numFragments = params.getFieldInt(field, HighlightParams.SNIPPETS, 1);
@@ -265,7 +292,7 @@ public class PositionsSolrHighlighter extends SolrHighlighter implements
               }
             }
           }
-          formatter.map = null;
+          formatter.setMap(null);
         }
         catch (Exception e) {
           //e.printStackTrace();
