@@ -3,7 +3,7 @@ Solr Plugin that enables to store term position in highlighted snippets
 
 Tested with Solr 8.11.2 and Java 1.8
 
-Derived from the work of Tricia Jenkins @ https://issues.apache.org/jira/browse/SOLR-4722
+Inspired by the work of Tricia Jenkins @ https://issues.apache.org/jira/browse/SOLR-4722
 
 ## Compiling
 Compile with ./gradlew build
