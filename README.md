@@ -1,14 +1,19 @@
 # positions-solr-highlighter
 Solr Plugin that enables to store term position in highlighted snippets
+
 Tested with Solr 8.11.2 and Java 1.8
 
-the fields must be indexed with term vectors: in schema add the following to the field definition **termVectors="true" termPositions="true" termOffsets="true"**
+Inspired by the work of Tricia Jenkins @ https://issues.apache.org/jira/browse/SOLR-4722
 
-compile with ./gradlew build
+## Compiling
+Compile with ./gradlew build
 
-put position-highlighter-1.0.jar in a folder
+## Installing
+The fields must be indexed with term vectors: in schema add the following to the field definition **termVectors="true" termPositions="true" termOffsets="true"**
 
-Add the following to solrconfig.xml
+If the term vectors are not found it falls back to *UnifiedSolrHighlighter*
+
+Put position-highlighter-1.0.jar in a folder and add the following to solrconfig.xml
 ```xml
 <lib path="<path to jar>/position-highlighter-1.0.jar" />
 ```
@@ -29,8 +34,11 @@ modify highlight searchComponent and add class="org.apache.solr.highlight.Positi
 ```
 
 Parameters:
- hl.pos
-      true:  return only positions and tokens
-     *false: return snippets with positions (default)
- hl.fragsize default to 100 to control the length of the snippets
- hl.
+
+- hl.pos
+ 
+  - true:  return only positions and tokens
+      
+  - *false: return snippets with positions (default)
+ 
+- hl.fragsize default to 100 to control the length of the snippets
