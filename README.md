@@ -42,3 +42,10 @@ Parameters:
   - *false: return snippets with positions (default)
  
 - hl.fragsize default to 100 to control the length of the snippets
+
+- hl.offsets
+  
+  - true: also return token offset start and end
+  
+  - *false: default return only position
+  
