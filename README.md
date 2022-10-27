@@ -41,7 +41,7 @@ Parameters:
       
   - *false: return snippets with positions (default)
  
-- hl.fragsize default to 100 to control the length of the snippets
+- hl.fragsize default to 100 to control the length of the snippets (0 for all text)
 
 - hl.offsets
   
