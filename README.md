@@ -34,8 +34,11 @@ modify highlight searchComponent and add class="org.apache.solr.highlight.Positi
 ```
 
 Parameters:
- hl.pos
-      true:  return only positions and tokens
-     *false: return snippets with positions (default)
- hl.fragsize default to 100 to control the length of the snippets
- hl.
+
+- hl.pos
+ 
+  - true:  return only positions and tokens
+      
+  - *false: return snippets with positions (default)
+ 
+- hl.fragsize default to 100 to control the length of the snippets
